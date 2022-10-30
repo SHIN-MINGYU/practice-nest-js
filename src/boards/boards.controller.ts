@@ -4,12 +4,15 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Board, BoardStatus } from './board.model';
+import { UpdateResult } from 'typeorm';
+import { BoardStatus } from './board-status.enum';
+import { Board } from './board.entity';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation';
@@ -22,7 +25,7 @@ export class BoardsController {
   // Method : GET
   // return all boards data
   @Get('/')
-  getAllBoards(): Array<Board> {
+  getAllBoards(): Promise<Array<Board>> {
     return this.boardsService.getAllBoards();
   }
 
@@ -39,7 +42,7 @@ export class BoardsController {
   // Method : GET
   // return searched board data
   @Get('/:id')
-  getBoardById(@Param('id') id: string): Board {
+  getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
     return this.boardsService.getBoardById(id);
   }
 
@@ -47,7 +50,7 @@ export class BoardsController {
   // Method : DELETE
   // delete board data by id
   @Delete('/:id')
-  deleteBoardById(@Param('id') id: string) {
+  deleteBoardById(@Param('id', ParseIntPipe) id: number) {
     this.boardsService.deleteBoardById(id);
   }
 
@@ -56,9 +59,9 @@ export class BoardsController {
   // update board data by id
   @Patch('/:id')
   updateBoardById(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  ): Board {
+  ): Promise<UpdateResult> {
     return this.boardsService.updateBoardStatusById(id, status);
   }
 }

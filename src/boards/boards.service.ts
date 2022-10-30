@@ -1,42 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Board, BoardStatus } from './board.model';
+import { UpdateResult } from 'typeorm';
+import { BoardStatus } from './board-status.enum';
+import { Board } from './board.entity';
+import { BoardRepository } from './board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 
 @Injectable()
 export class BoardsService {
-  private boards: Array<Board> = [];
-  private id: string = '1';
+  constructor(private boardsRepository: BoardRepository) {}
 
   /**
    * @return {Array<Board>} - all of the boards data
    */
-  getAllBoards(): Array<Board> {
-    return this.boards;
+  async getAllBoards(): Promise<Array<Board>> {
+    return await this.boardsRepository.find();
   }
 
   /**
-   * @description - push board data in boards array
+   * @description - create board data
    * @returns {Board} - board data what you create
    */
-  createBoard(createBoardDto: CreateBoardDto): Board {
-    const board: Board = {
-      id: this.id,
-      status: BoardStatus.PUBLIC,
-      ...createBoardDto,
-    };
-    this.boards.push(board);
-    this.id = String(Number(this.id) + 1);
-
-    return board;
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardsRepository.createBoard(createBoardDto);
   }
 
   /**
    * @description - search in Board Array by id
-   * @param {string} id what board you want to search
+   * @param {number} id what board you want to search
    * @returns {Board} - Board what you searched by id
    */
-  getBoardById(id: string): Board {
-    const foundBaord = this.boards.find((board) => board.id === id);
+  async getBoardById(id: number): Promise<Board> {
+    const foundBaord = this.boardsRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!foundBaord) {
       throw new NotFoundException("Can't find board by id '" + id);
@@ -47,21 +45,28 @@ export class BoardsService {
 
   /**
    * @description - delete Board in Board Array by id
-   * @param {string} id what board you want to delete
+   * @param {number} id what board you want to delete
    */
-  deleteBoardById(id: string) {
-    const foundBaord = this.boards.find((board) => board.id === id);
-    this.boards.filter((board) => board.id === foundBaord.id);
+  async deleteBoardById(id: number) {
+    const result = await this.boardsRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Can not find board with id ' + id);
+    }
   }
 
   /**
    * @description - update Board in Board Array by id
-   * @param {string} id what board you want to update
+   * @param {number} id what board you want to update
    * @param {BoardStatus} status
    */
-  updateBoardStatusById(id: string, status: BoardStatus): Board {
-    const board = this.getBoardById(id);
-    board.status = status;
+  async updateBoardStatusById(
+    id: number,
+    status: BoardStatus,
+  ): Promise<UpdateResult> {
+    const board = this.boardsRepository.update(id, {
+      status,
+    });
+
     return board;
   }
 }

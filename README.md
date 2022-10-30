@@ -148,3 +148,23 @@ transform(value, metadata)
 - value : processed argument value
 - metadata : object include meta-data about arguments
 - return : send to route handler, if exception is occuredm it is sent to client directly
+
+## 12. TypeORM in NestJS
+
+```
+$ yarn add @nestjs/typeorm typeorm pg
+```
+
+- entity class must extend from BaseEntity class
+- <strong>@PrimaryGeneratedColumn</strong> : designate primary key decorator
+- <strong>@Column</strong> : column decorator
+- <strong>@Entity</strong> : define entity class decorator
+
+## 13. What is repository?
+
+- work with entity object and process CRUD work
+- If we do some work about databases, process in repository
+- this is called repository pattern
+- repository class muse extend Repository< T > class
+- <strong>@EntityRepository(T)</strong> decorator is used to decline custom-repository - <strong>deprecated</strong>
+- we should do Constructor DI in service file and use <strong> @InjectRepository()</strong>decorator

@@ -3,14 +3,12 @@ import {
   BadRequestException,
   PipeTransform,
 } from '@nestjs/common';
-import { BoardStatus } from '../board.model';
+import { BoardStatus } from '../board-status.enum';
 
 export class BoardStatusValidationPipe implements PipeTransform {
   readonly StatusOption = [BoardStatus.PUBLIC, BoardStatus.PRIVATE];
 
   transform(value: any, metadata: ArgumentMetadata) {
-    console.log('value : ', value);
-    console.log('metadata : ', metadata);
     if (!this.isStatusVaild(value)) {
       throw new BadRequestException(
         `${value} is not a valid board status option`,
