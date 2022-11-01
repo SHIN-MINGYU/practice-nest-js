@@ -109,16 +109,16 @@ app.post("/",(req,res)=>{
 ### Handler-level pipe
 
 - use <strong>@UsePipes()</strong>decorator
-- this is used just in designated handler function
+- This is used just in designated handler function
 
 ### Parameter-level pipe
 
-- use in <strong>@Body()</strong> decorator's second parameter
+- Use in <strong>@Body()</strong> decorator's second parameter
 
 ### Global-level pipe
 
-- this is apply all request
-- we should input <strong>app.useGlobalPipes()</strong> method in main.ts
+- This is apply all request
+- We should input <strong>app.useGlobalPipes()</strong> method in main.ts
 
 ### Built-in pipe
 
@@ -168,3 +168,24 @@ $ yarn add @nestjs/typeorm typeorm pg
 - repository class muse extend Repository< T > class
 - <strong>@EntityRepository(T)</strong> decorator is used to decline custom-repository - <strong>deprecated</strong>
 - we should do Constructor DI in service file and use <strong> @InjectRepository()</strong>decorator
+
+## 14. User data validation
+
+- For user-data validation, we can use class-validation module
+
+## 15. <strong>@Unique</strong> decorator
+
+- this decorator is used to declare a unique key for the entity
+- first parameter is array of unique key what you want to handle as unique key
+
+## 16. <strong>@UseGuard</strong> decorator
+
+- this decorator is used to input user data in request information
+- but the token is not authorized, return 401 error
+
+## 17. In NestJS, middleware's call time
+
+```
+middleware -> guard -> interceptor (before) -> pipe -> controller ->
+service -> controller -> interceptor (after) -> filter(if applicate) -> client
+```

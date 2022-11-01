@@ -1,7 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-console.log([__dirname + '/../**/*.entity.ts']);
-
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
