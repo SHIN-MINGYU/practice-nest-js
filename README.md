@@ -189,3 +189,34 @@ $ yarn add @nestjs/typeorm typeorm pg
 middleware -> guard -> interceptor (before) -> pipe -> controller ->
 service -> controller -> interceptor (after) -> filter(if applicate) -> client
 ```
+
+## 18. How to remain log in NextJS
+
+- NestJS have built-in logger class
+
+```
+import {Logger} from '@nextjs/logger';
+```
+
+### Log's level
+
+- Log - common log
+- Warning - critical or non-destructive unprocessed problem
+- Error - critical or destructive unprocessed problem
+- Debug - Useful information debug logic when error is occured - for developer
+- Verbose - application's work information - for administration
+
+## 19. Configuration
+
+### Codebase vs Environment Variables
+
+- Codebase - it is information whatever it is export like PORT
+- Environment Variables - it is danger information if it is export (password , secret key, ...etc)
+
+In windows, install win-node-env.
+because Windows isn't supported about environment variables
+
+```
+$ npm i -g win-node-env
+$ yarn add config
+```
